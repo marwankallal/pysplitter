@@ -1,3 +1,5 @@
+import sys
+
 ssid = "hellogoodbye"
 dictionary = set(["hell", "hello", "good", "bye", "goodbye"])
 
@@ -15,15 +17,30 @@ def combos(str):
 
 # Get each sentence, rank it, and display top n
 def split(ssid, words, top):
-	sentences = list()
+    sentences = list()
 
-	for combo in combos(ssid):
-		wordcnt = 0
-		sentences.append((score(combo, words), combo))
+    minscore = sys.maxint
+    sentencecnt = 0
+
+    for combo in combos(ssid):
+        comboscore = score(combo, words)
+        if sentencecnt < top:
+            if minscore > comboscore:
+                minscore = comboscore
+
+            sentences.append((comboscore, combo))
+
+            sentencecnt += 1
+
+        elif comboscore > minscore:
+            sentences.remove(min(sentences))
+            sentences.append((comboscore, combo))
+            minscore = min(sentences)[0]
+
 	sentences.sort(reverse=True)
 
-	for i in range(0, top):
-		print(sentences[i])
+    for sentence in sentences:
+        print(sentence)
 
 
 
